@@ -1,0 +1,37 @@
+////////////////////////////////////////////////////////////////////////////////
+// Time Demo
+// By James Bovis
+// This small React App is a personal project of being able to display the
+// current time in browser and to create a nice Dashboard that would be
+// responsive and useful for the user
+////////////////////////////////////////////////////////////////////////////////
+
+// Import reset CSS sheet
+@import '~normalize-scss/sass/normalize/import-now'
+@import 'variables'
+@import 'mixins/breakpoints'
+@import 'colours'
+@import 'layout/layout'
+@import 'components/team-member'
+@import 'components/time-format-toggle'
+
+
+// sass-lint:disable no-universal-selectors
+*,
+*::before,
+*::after
+  box-sizing: border-box
+// sass-lint:enable no-universal-selectors
+
+.app
+  background: $grey-200
+  height: 100%
+  min-height: 100vh
+  text-align: center
+  padding: 1.5rem
+
+  +mediawidth(md)
+    align-items: center
+    display: flex
+    flex-direction: column
+    justify-content: center

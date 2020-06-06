@@ -1,0 +1,76 @@
+////////////////////////////////////////////////////////////////////////////////
+// Team Member
+// The styles for each team member component which features an avatar, name,
+// current time and other attributes
+////////////////////////////////////////////////////////////////////////////////
+
+// A simple wrapper which contains every team-member
+.team-member-wrapper
+  display: grid
+  grid-gap: 3rem
+  grid-template-columns: repeat(2, 1fr)
+  grid-template-rows: auto
+  justify-content: space-around
+  max-width: 120rem
+  padding: 0 3rem
+  width: 100%
+
+  +mediawidth(md)
+    grid-template-columns: repeat(3, 1fr)
+
+  +mediawidth(lg)
+    grid-template-columns: repeat(6, 1fr)
+
+.team-member
+  align-items: center
+  background: $brand-white
+  border-radius: .3rem
+  box-shadow: 0 0 .6rem rgba($brand-black, .25)
+  display: flex
+  flex-direction: column
+  margin: 0 auto
+  max-width: 15rem
+  padding: 1rem
+  width: 100%
+
+  &__avatar
+    position: relative
+
+    &__day-night-indicator
+      background: lightGrey
+      border-radius: 50%
+      height: 2rem
+      position: absolute
+      right: .5rem
+      top: .5rem
+      width: 2rem
+
+      &--offline
+        background: $danger-red-300
+
+      &--online
+        background: $success-green-300
+
+    &__image
+      border-radius: 50%
+      margin-bottom: 1rem
+      width: 10rem
+
+  &__name
+    color: $brand-blue-500
+    font-size: $small-title
+    margin: 0
+
+  &__current-time
+    color: $brand-blue-500
+    display: flex
+    flex-direction: column
+    font-family: $font-family-base
+    font-size: $micro
+    margin:  0 0 1rem
+
+    span
+      font-size: $paragraph
+      font-weight: 600
+      margin-top: .5rem
+

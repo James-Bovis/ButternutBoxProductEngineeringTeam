@@ -1,0 +1,33 @@
+////////////////////////////////////////////////////////////////////////////////
+// Time format toggle
+// An easy way for someone to toggle between 24 hour and 12 hour time
+////////////////////////////////////////////////////////////////////////////////
+
+.time-format-toggle
+  align-items: center
+  bottom: 1rem
+  color: $brand-blue-500
+  display: flex
+  font-size: $paragraph
+  position: fixed
+  right: 2rem
+
+  button
+    background: $brand-blue-500
+    border: 0
+    border-radius: .3rem
+    color: $brand-white
+    font-family: $font-family-base
+    font-size: $paragraph
+    padding: .5rem 1rem
+    transition: opacity .25s ease
+
+    &:first-of-type
+      margin-left: 2rem
+      margin-right: 1rem
+
+    &:focus
+      outline: 0
+
+    &.inactive
+      opacity: .5

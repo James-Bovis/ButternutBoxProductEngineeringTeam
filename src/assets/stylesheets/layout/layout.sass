@@ -1,0 +1,27 @@
+////////////////////////////////////////////////////////////////////////////////
+// Layout
+// Here is contained the base styles for rendering the layout of the App itself.
+// No stylistic rules should be added here, this is purely for order and
+// presentation.
+////////////////////////////////////////////////////////////////////////////////
+
+html
+  font-size: .625rem // Allows us to use 1rem = 10px
+
+body
+  -moz-osx-font-smoothing: grayscale // sass-lint:disable-line
+  -webkit-font-smoothing: antialiased // sass-lint:disable-line
+  font-family: $font-family-headings
+  margin: 0
+
+header
+  h1
+    color: $brand-blue-500
+    font-family: $font-family-headings
+    font-size: $small-title
+    font-weight: 500
+    margin: 2rem 0
+
+    +mediawidth(md)
+      margin-bottom: 5rem
+      font-size: $medium-title
