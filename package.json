@@ -5,7 +5,7 @@
   "dependencies": {
     "flow-bin": "^0.126.1",
     "moment-timezone": "^0.5.31",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.14.1",
     "normalize-scss": "^7.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.11.0",
