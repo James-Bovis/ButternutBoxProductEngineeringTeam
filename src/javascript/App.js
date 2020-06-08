@@ -59,7 +59,7 @@ const App = () => {
       <React.Suspense fallback={<p>App is waking up...</p>}>
         <header className='header'>
           <h1>
-            { `${generateGreeting(currentTime.hour())}, it's currently ${currentTime.format(`dddd do MMMM - ${is24Hour ? 'HH:mm' : 'hh:mm A' }`)}`}
+            { `${generateGreeting(currentTime.hour())}, it's currently ${currentTime.format(`dddd Do MMMM - ${is24Hour ? 'HH:mm' : 'hh:mm A' }`)}`}
           </h1>
         </header>
         <div className='team-member-wrapper'>
