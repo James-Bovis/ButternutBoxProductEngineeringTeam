@@ -47,6 +47,12 @@ const TeamMembers: Array<TeamMember> = [
     timezone: 'Europe/London',
     gender: 'female',
     avatarUrl: 'https://ca.slack-edge.com/T0P6BBP1N-UB1U1EGB0-93a5bdc616ab-512'
+  },
+  {
+    name: 'Iva',
+    timezone: 'Europe/London',
+    gender: 'female',
+    avatarUrl: 'https://ca.slack-edge.com/T0P6BBP1N-ULNRA693L-6209b1706303-512'
   }
 ]
 
