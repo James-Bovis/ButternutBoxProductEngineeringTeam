@@ -70,7 +70,7 @@ const TeamMember = ({ name, timezone, gender, avatarUrl }: Props): React.Node =>
         <img
           alt={getCountryCode(timezone)}
           className='team-member__country'
-          src={`http://catamphetamine.gitlab.io/country-flag-icons/3x2/${getCountryCode(timezone)}.svg`}
+          src={`https://catamphetamine.gitlab.io/country-flag-icons/3x2/${getCountryCode(timezone)}.svg`}
         />
       </div>
     </div>
