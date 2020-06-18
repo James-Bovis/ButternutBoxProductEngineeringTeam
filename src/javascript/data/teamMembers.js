@@ -35,7 +35,7 @@ const TeamMembers: Array<TeamMember> = [
   },
   {
     name: 'Tomas',
-    timezone: 'Europe/Dublin',
+    timezone: 'Europe/London',
     gender: 'male',
     avatarUrl: 'https://ca.slack-edge.com/T0P6BBP1N-U6278RRE3-8bace14f04b9-512',
     team: 'ECT'
