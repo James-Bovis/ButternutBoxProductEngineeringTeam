@@ -3,11 +3,11 @@
 import * as React from 'react'
 
 // Utils
-import moment from 'moment-timezone'
 import { zones } from 'moment-timezone/data/meta/latest.json'
 
 // Context
 import Show24HourTimeContext from '../Show24HourTimeContext'
+import CurrentTimeContext from '../CurrentTimeContext'
 
 import type { TeamMember as TeamMemberType } from '../data/teamMembers'
 
@@ -20,16 +20,7 @@ type Props = {|
 
 const TeamMember = ({ name, timezone, gender, avatarUrl }: Props): React.Node => {
   const show24HourTime = React.useContext(Show24HourTimeContext)
-
-  const [ time, setTime ] = React.useState(moment().tz(timezone))
-
-  React.useEffect((): void => {
-    const tick = (): void => setTime(moment().tz(timezone))
-
-    setInterval (
-      tick, 1000
-    )
-  }, [time, timezone])
+  const currentTime = React.useContext(CurrentTimeContext)
 
   const isOnline = (hour: number): string => {
     if (hour < 18 && hour >= 9 ) {
@@ -46,7 +37,7 @@ const TeamMember = ({ name, timezone, gender, avatarUrl }: Props): React.Node =>
   return (
     <div className='team-member'>
       <div className='team-member__avatar'>
-        <div className={`team-member__avatar__day-night-indicator ${isOnline(time.hour())}`} />
+        <div className={`team-member__avatar__day-night-indicator ${isOnline(currentTime.hour())}`} />
         <img
           alt={name}
           className='team-member__avatar__image'
@@ -58,11 +49,15 @@ const TeamMember = ({ name, timezone, gender, avatarUrl }: Props): React.Node =>
           { name }
         </h2>
         <p className='team-member__information__current-time'>
+          <React.Suspense fallback={<p>Loading...</p>}>
           {
-            show24HourTime
-              ? time.format('HH:mm')
-              : time.format('hh:mm A')
+            currentTime.tz(timezone).format(
+              show24HourTime
+                ? 'HH:mm'
+                : 'hh:mm A'
+            )
           }
+          </React.Suspense>
         </p>
         <small className='team-member__information__timezone'>
           { timezone }

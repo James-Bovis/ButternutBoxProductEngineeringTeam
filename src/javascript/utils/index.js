@@ -23,7 +23,7 @@ const capitaliseFirstLetter = (word: string): string => {
   return `${word[0].toUpperCase()}${word.slice(1)}`
 }
 
-const useLocalStorage = (key, initialValue): void => {
+const useLocalStorage = (key: string, initialValue: string | boolean): void => {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = useState(() => {

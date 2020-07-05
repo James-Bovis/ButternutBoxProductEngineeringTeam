@@ -17,6 +17,7 @@ import './../assets/stylesheets/application.sass'
 
 // Context
 import { Show24HourTimeProvider } from './Show24HourTimeContext'
+import { CurrentTimeProvider } from './CurrentTimeContext'
 
 import type { TeamMember as TeamMemberType } from './data/teamMembers'
 
@@ -50,12 +51,14 @@ const App = () => {
   const estimatedTimezone = moment.tz.guess()
   const [ currentTime, setCurrentTime ] = React.useState(moment().tz(estimatedTimezone))
 
-  React.useEffect((): void => {
+  React.useEffect(() => {
     const tick = (): void => setCurrentTime(moment().tz(estimatedTimezone))
 
-    setInterval (
+    const interval = setInterval (
       tick, 1000
     )
+
+    return (): void => clearInterval(interval)
   }, [currentTime, estimatedTimezone])
 
   const filteredTeamMembers = TeamMembers.filter((teamMember: TeamMemberType): boolean | TeamMemberType => {
@@ -76,17 +79,19 @@ const App = () => {
         </header>
         <div className='team-member-wrapper'>
           <Show24HourTimeProvider value={is24Hour}>
-            {
-              filteredTeamMembers.map(({ name, timezone, gender, avatarUrl }: TeamMemberType): React.Element<typeof TeamMember> => (
-                <TeamMember
-                  name={name}
-                  timezone={timezone}
-                  gender={gender}
-                  avatarUrl={avatarUrl}
-                  key={name}
-                />
-              ))
-            }
+            <CurrentTimeProvider value={currentTime}>
+              {
+                filteredTeamMembers.map(({ name, timezone, gender, avatarUrl }: TeamMemberType): React.Element<typeof TeamMember> => (
+                  <TeamMember
+                    name={name}
+                    timezone={timezone}
+                    gender={gender}
+                    avatarUrl={avatarUrl}
+                    key={name}
+                  />
+                ))
+              }
+            </CurrentTimeProvider>
           </Show24HourTimeProvider>
         </div>
         <div className='settings'>
