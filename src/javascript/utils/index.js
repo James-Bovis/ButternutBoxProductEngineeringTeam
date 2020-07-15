@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import type { Gender } from './../components/TeamMember.js'
+import type { Gender } from '../data/teamMembers'
 
 const genderToPronoun = (gender: Gender): string => {
   switch (gender) {

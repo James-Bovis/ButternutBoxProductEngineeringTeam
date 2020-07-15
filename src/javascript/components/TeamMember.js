@@ -37,7 +37,7 @@ const TeamMember = ({ name, timezone, gender, avatarUrl }: Props): React.Node =>
   return (
     <div className='team-member'>
       <div className='team-member__avatar'>
-        <div className={`team-member__avatar__day-night-indicator ${isOnline(currentTime.hour())}`} />
+        <div className={`team-member__avatar__day-night-indicator ${isOnline(currentTime.tz(timezone).hour())}`} />
         <img
           alt={name}
           className='team-member__avatar__image'

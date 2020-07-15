@@ -143,5 +143,6 @@ const TeamMembers: Array<TeamMember> = [
 export default TeamMembers
 export type {
   TeamMember,
-  Team
+  Team,
+  Gender
 }
