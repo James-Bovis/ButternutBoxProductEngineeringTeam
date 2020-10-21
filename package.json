@@ -10,7 +10,7 @@
     "normalize-scss": "^7.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1",
+    "react-scripts": "3.4.4",
     "sass-lint": "^1.13.1"
   },
   "scripts": {
