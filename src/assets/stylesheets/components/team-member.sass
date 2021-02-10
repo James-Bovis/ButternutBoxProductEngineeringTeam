@@ -16,6 +16,7 @@
 
   +mediawidth(md)
     grid-gap: 3rem
+    grid-template-columns: repeat(auto-fit, minmax(35rem, 1fr))
 
 .team-member
   align-items: center
@@ -56,6 +57,14 @@
   &__information
     margin-left: 1rem
     text-align: left
+
+    span
+      display: flex
+      flex-direction: column
+      margin-bottom: 1rem
+
+      &:last-child
+        margin-bottom: 0
 
     &__name
       color: $brand-blue-500

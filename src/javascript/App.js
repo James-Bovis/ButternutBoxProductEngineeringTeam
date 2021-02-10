@@ -74,57 +74,59 @@ const App = () => {
       <React.Suspense fallback={<p>App is waking up...</p>}>
         <header className='header'>
           <h1>
-            { `${generateGreeting(currentTime.hour())}, it's currently ${currentTime.format(`dddd Do MMMM - ${is24Hour ? 'HH:mm' : 'hh:mm A' }`)}`}
+            { generateGreeting(currentTime.hour()) }
           </h1>
+          <h2>
+            { `It's currently ${currentTime.format(`dddd Do MMMM - ${is24Hour ? 'HH:mm' : 'hh:mm A' }`)}` }
+          </h2>
+          <div className='settings'>
+            <div className='settings__item'>
+              <p className='settings__item__name'>
+                { `Time format: ` }
+              </p>
+              <button className={`${is24Hour ? '' : 'inactive'}`} onClick={(): void => setIs24Hour(true)}>
+                { `24 hour` }
+              </button>
+              <button className={`${is24Hour ? 'inactive' : ''}`} onClick={(): void => setIs24Hour(false)}>
+                { `12 hour` }
+              </button>
+            </div>
+
+            <div className='settings__item'>
+              <p className='settings__item__name'>
+                { `Team filter: ` }
+              </p>
+              <button className={`${teamInView === 'LTV' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('LTV')}>
+                { `LTV` }
+              </button>
+              <button className={`${teamInView === 'Growth' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('Growth')}>
+                { `Growth` }
+              </button>
+              <button className={`${teamInView === 'Platform' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('Platform')}>
+                { `Platform` }
+              </button>
+              <button className={`${teamInView === 'Data' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('Data')}>
+                { `Data` }
+              </button>
+              <button className={`${teamInView === 'All' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('All')}>
+                { `All` }
+              </button>
+            </div>
+          </div>
         </header>
         <div className='team-member-wrapper'>
           <Show24HourTimeProvider value={is24Hour}>
             <CurrentTimeProvider value={currentTime}>
               {
-                filteredTeamMembers.map(({ name, timezone, gender, avatarUrl, onlineStatus }: TeamMemberType): React.Element<typeof TeamMember> => (
+                filteredTeamMembers.map(({ userID }: TeamMemberType): React.Element<typeof TeamMember> => (
                   <TeamMember
-                    name={name}
-                    timezone={timezone}
-                    gender={gender}
-                    avatarUrl={avatarUrl}
-                    key={name}
-                    onlineStatus={onlineStatus}
+                    key={userID}
+                    userID={userID}
                   />
                 ))
               }
             </CurrentTimeProvider>
           </Show24HourTimeProvider>
-        </div>
-        <div className='settings'>
-          <div className='settings__item'>
-            <p className='settings__item__name'>
-              { `Time format: ` }
-            </p>
-            <button className={`${is24Hour ? '' : 'inactive'}`} onClick={(): void => setIs24Hour(true)}>
-              { `24 hour` }
-            </button>
-            <button className={`${is24Hour ? 'inactive' : ''}`} onClick={(): void => setIs24Hour(false)}>
-              { `12 hour` }
-            </button>
-          </div>
-
-          <div className='settings__item'>
-            <p className='settings__item__name'>
-              { `Team filter: ` }
-            </p>
-            <button className={`${teamInView === 'ECT' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('ECT')}>
-              { `ECT` }
-            </button>
-            <button className={`${teamInView === 'NCT' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('NCT')}>
-              { `NCT` }
-            </button>
-            <button className={`${teamInView === 'Platform' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('Platform')}>
-              { `Platform` }
-            </button>
-            <button className={`${teamInView === 'All' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('All')}>
-              { `All` }
-            </button>
-          </div>
         </div>
       </React.Suspense>
     </div>
