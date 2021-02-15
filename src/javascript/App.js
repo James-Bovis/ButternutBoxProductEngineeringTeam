@@ -1,23 +1,20 @@
 // @flow
 
 import * as React from 'react'
-import moment from 'moment-timezone'
+import { useRecoilState } from 'recoil'
+import { format } from 'date-fns'
+
+// Atoms
+import { is24HourState, teamInViewState, currentTimeState } from './atoms'
 
 // Data
 import TeamMembers from './data/teamMembers'
-
-// Utils
-import { useLocalStorage } from './utils'
 
 // Components
 import TeamMember from './components/TeamMember.js'
 
 // Styles
 import './../assets/stylesheets/application.sass'
-
-// Context
-import { Show24HourTimeProvider } from './Show24HourTimeContext'
-import { CurrentTimeProvider } from './CurrentTimeContext'
 
 import type { TeamMember as TeamMemberType } from './data/teamMembers'
 
@@ -45,21 +42,19 @@ const generateGreeting = (hour: number): Greeting => {
 }
 
 const App = (): React.Element<'div'> => {
-  const [is24Hour, setIs24Hour] = useLocalStorage('is24Hour', true)
-  const [teamInView, setTeamInView] = useLocalStorage('teamInView', 'All')
-
-  const estimatedTimezone = moment.tz.guess()
-  const [ currentTime, setCurrentTime ] = React.useState(moment().tz(estimatedTimezone))
+  const [is24Hour, setIs24Hour] = useRecoilState(is24HourState)
+  const [teamInView, setTeamInView] = useRecoilState(teamInViewState)
+  const [currentTime, setCurrentTime] = useRecoilState(currentTimeState)
 
   React.useEffect(() => {
-    const tick = (): void => setCurrentTime(moment().tz(estimatedTimezone))
+    const tick = (): void => setCurrentTime(new Date())
 
     const interval = setInterval (
       tick, 1000
     )
 
     return (): void => clearInterval(interval)
-  }, [currentTime, estimatedTimezone])
+  }, [currentTime, setCurrentTime])
 
   const filteredTeamMembers = TeamMembers.filter((teamMember: TeamMemberType): boolean | TeamMemberType => {
     if (teamInView !== 'All') {
@@ -74,10 +69,10 @@ const App = (): React.Element<'div'> => {
       <React.Suspense fallback={<p>App is waking up...</p>}>
         <header className='header'>
           <h1>
-            { generateGreeting(currentTime.hour()) }
+            { generateGreeting(currentTime.getHours()) }
           </h1>
           <h2>
-            { `It's currently ${currentTime.format(`dddd Do MMMM - ${is24Hour ? 'HH:mm' : 'hh:mm A' }`)}` }
+            { `It's currently ${format(currentTime, `cccc, do MMMM - ${is24Hour ? 'HH:mm' : 'hh:mm a' }`)}` }
           </h2>
           <div className='settings'>
             <div className='settings__item'>
@@ -118,18 +113,14 @@ const App = (): React.Element<'div'> => {
           { `Members: ${filteredTeamMembers.length}` }
         </p>
         <div className='team-member-wrapper'>
-          <Show24HourTimeProvider value={is24Hour}>
-            <CurrentTimeProvider value={currentTime}>
-              {
-                filteredTeamMembers.map(({ userID }: TeamMemberType): React.Element<typeof TeamMember> => (
-                  <TeamMember
-                    key={userID}
-                    userID={userID}
-                  />
-                ))
-              }
-            </CurrentTimeProvider>
-          </Show24HourTimeProvider>
+          {
+            filteredTeamMembers.map(({ userID }: TeamMemberType): React.Element<typeof TeamMember> => (
+              <TeamMember
+                key={userID}
+                userID={userID}
+              />
+            ))
+          }
         </div>
       </React.Suspense>
     </div>

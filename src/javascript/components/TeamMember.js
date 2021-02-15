@@ -3,12 +3,14 @@
 import * as React from 'react'
 
 // Utils
-import { zones } from 'moment-timezone/data/meta/latest.json'
 import Skeleton from 'react-loading-skeleton'
+import { useRecoilValue } from 'recoil'
+import { format } from 'date-fns'
+import { utcToZonedTime } from 'date-fns-tz'
+import { getCountryForTimezone } from 'countries-and-timezones'
 
-// Context
-import Show24HourTimeContext from '../Show24HourTimeContext'
-import CurrentTimeContext from '../CurrentTimeContext'
+// Atoms
+import { currentTimeState, is24HourState } from '../atoms'
 
 import type { TeamMember as TeamMemberType } from '../data/teamMembers'
 
@@ -111,16 +113,14 @@ const initialState = {
 }
 
 const TeamMember = ({ userID }: Props): React.Node => {
-  const [ userProfile, setUserProfile ] = React.useState<UserProfile>(initialState)
+  const [userProfile, setUserProfile] = React.useState<UserProfile>(initialState)
   const [isOnline, setIsOnline] = React.useState(false)
   const [hasLoaded, setHasLoaded] = React.useState(false)
 
-  const show24HourTime = React.useContext(Show24HourTimeContext)
-  const currentTime = React.useContext(CurrentTimeContext)
+  const show24HourTime = useRecoilValue(is24HourState)
+  const currentTime = useRecoilValue(currentTimeState)
 
-  const getCountryCode = (zone: string): string => {
-    return zones[zone] && zones[zone].countries[0]
-  }
+  const countryInformation = getCountryForTimezone(userProfile.tz)
 
   // Fetch the Team Members Slack profile
   React.useEffect((): void => {
@@ -161,23 +161,22 @@ const TeamMember = ({ userID }: Props): React.Node => {
               { userProfile.real_name }
             </h2>
             <p className='team-member__information__current-time'>
-              <React.Suspense fallback={<p>Loading...</p>}>
-                {
-                  currentTime.tz(userProfile.tz).format(
-                    show24HourTime
-                      ? 'HH:mm'
-                      : 'hh:mm A'
-                  )
-                }
-              </React.Suspense>
+              {
+                format(
+                  utcToZonedTime(currentTime, userProfile.tz),
+                  show24HourTime
+                    ? 'HH:mm'
+                    : 'hh:mm a'
+                )
+              }
             </p>
             <small className='team-member__information__timezone'>
               { userProfile.tz }
             </small>
             <img
-              alt={getCountryCode(userProfile.tz)}
+              alt={countryInformation.name}
               className='team-member__country'
-              src={`https://catamphetamine.gitlab.io/country-flag-icons/3x2/${getCountryCode(userProfile.tz)}.svg`}
+              src={`https://catamphetamine.gitlab.io/country-flag-icons/3x2/${countryInformation.id}.svg`}
             />
           </div>
         </div>
