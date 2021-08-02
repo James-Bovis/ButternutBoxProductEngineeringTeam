@@ -27,10 +27,6 @@ const TeamMembers: Array<TeamMember> = [
   },
   {
     team: 'LTV',
-    userID: 'UCXR81C49'
-  },
-  {
-    team: 'LTV',
     userID: 'U011DRA8KGW'
   },
   {
