@@ -3,16 +3,13 @@
 import * as React from 'react'
 
 // Utils
-import Skeleton from 'react-loading-skeleton'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { format } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'
 import { getCountryForTimezone } from 'countries-and-timezones'
 
 // Atoms
-import { currentTimeState, is24HourState } from '../atoms'
-
-import type { TeamMember as TeamMemberType } from '../data/teamMembers'
+import { currentTimeState, is24HourState, onlineTeamMemberIds } from '../atoms'
 
 type UserProfile = {|
   id: string,
@@ -62,151 +59,73 @@ type UserProfile = {|
 |}
 
 type Props = {|
-  userID: $PropertyType<TeamMemberType, 'userID'>
+  userProfile: UserProfile
 |}
 
-const initialState = {
-  id: '',
-  team_id: '',
-  name: '',
-  deleted: false,
-  color: '',
-  real_name: '',
-  tz: '',
-  tz_label: '',
-  tz_offset: 0,
-  profile: {
-    title: '',
-    phone: '',
-    skype: '',
-    real_name: '',
-    real_name_normalized: '',
-    display_name: '',
-    display_name_normalized: '',
-    fields: null,
-    status_text: '',
-    status_emoji: '',
-    status_expiration: 0,
-    avatar_hash: '',
-    image_original: '',
-    is_custom_image: false,
-    first_name: '',
-    last_name: '',
-    image_24: '',
-    image_32: '',
-    image_48: '',
-    image_72: '',
-    image_192: '',
-    image_512: '',
-    image_1024: '',
-    status_text_canonical: '',
-    team: ''
-  },
-  is_admin: false,
-  is_owner: false,
-  is_primary_owner: false,
-  is_restricted: false,
-  is_ultra_restricted: false,
-  is_bot: false,
-  is_app_user: false,
-  updated: 0
-}
-
-const TeamMember = ({ userID }: Props): React.Node => {
-  const [userProfile, setUserProfile] = React.useState<UserProfile>(initialState)
+const TeamMember = ({ userProfile }: Props): React.Node => {
   const [isOnline, setIsOnline] = React.useState(false)
-  const [hasLoaded, setHasLoaded] = React.useState(false)
+  const setOnlineTeamMemberIds = useSetRecoilState(onlineTeamMemberIds)
 
   const show24HourTime = useRecoilValue(is24HourState)
   const currentTime = useRecoilValue(currentTimeState)
 
   const countryInformation = getCountryForTimezone(userProfile.tz)
 
-  // Fetch the Team Members Slack profile
+  // Fetch the Team Members Slack profile and presence status
   React.useEffect((): void => {
-    const userProfileEndpoint = `/.netlify/functions/fetchUserProfile?userID=${userID}`
-    const userPresenceEndpoint = `/.netlify/functions/slackOnlineStatus?userID=${userID}`
+    const userPresenceEndpoint = `/.netlify/functions/slackOnlineStatus?userID=${userProfile.id}`
 
-    Promise.all([
-      fetch(userProfileEndpoint)
-      .then((response) => response.json())
-      .then((data) => {
-        setUserProfile(data)
-      }),
-
-      fetch(userPresenceEndpoint)
-      .then((response) => response.text())
-      .then((data) => {
-        setIsOnline(data === 'active')
-      })
-    ]).then(() => {
-      setHasLoaded(true)
+    fetch(userPresenceEndpoint)
+    .then((response) => response.text())
+    .then((data) => {
+      if (data === 'active') {
+        setIsOnline(true)
+        setOnlineTeamMemberIds((oldArray) => [...oldArray, userProfile.id])
+      } else {
+        setIsOnline(false)
+      }
     })
-  }, [userID])
+  }, [userProfile.id, setOnlineTeamMemberIds])
 
   return (
-    hasLoaded
-      ? (
-        <div className='team-member'>
-          <div className='team-member__avatar'>
-            <div className={`team-member__avatar__day-night-indicator ${isOnline ? 'team-member__avatar__day-night-indicator--online' : 'team-member__avatar__day-night-indicator--offline'}`} />
-            <img
-              alt={userProfile.real_name}
-              className='team-member__avatar__image'
-              src={userProfile.profile.image_192}
-            />
-          </div>
-          <div className='team-member__information'>
-            <h2 className='team-member__information__name'>
-              { userProfile.real_name }
-            </h2>
-            <p className='team-member__information__current-time'>
-              {
-                format(
-                  utcToZonedTime(currentTime, userProfile.tz),
-                  show24HourTime
-                    ? 'HH:mm'
-                    : 'hh:mm a'
-                )
-              }
-            </p>
-            <small className='team-member__information__timezone'>
-              { userProfile.tz }
-            </small>
-            <img
-              alt={countryInformation.name}
-              className='team-member__country'
-              src={`https://catamphetamine.gitlab.io/country-flag-icons/3x2/${countryInformation.id}.svg`}
-            />
-          </div>
-        </div>
-      ) : (
-        <div className='team-member'>
-          <Skeleton circle={true} height={100} width={100} />
-          <div className='team-member__information'>
-            <Skeleton
-              height={20}
-              width={200}
-            />
-            <Skeleton
-              height={30}
-              width={200}
-            />
-            <Skeleton
-              height={15}
-              width={200}
-            />
-            <Skeleton
-              className='team-member__country'
-              height={20}
-              width={20}
-              circle={true}
-            />
-          </div>
-        </div>
-      )
+    <div className='team-member'>
+      <div className='team-member__avatar'>
+        <div className={`team-member__avatar__day-night-indicator ${isOnline ? 'team-member__avatar__day-night-indicator--online' : 'team-member__avatar__day-night-indicator--offline'}`} />
+        <img
+          alt={userProfile.real_name}
+          className='team-member__avatar__image'
+          src={userProfile.profile.image_192}
+        />
+      </div>
+      <div className='team-member__information'>
+        <h2 className='team-member__information__name'>
+          { userProfile.real_name }
+        </h2>
+        <p className='team-member__information__current-time'>
+          {
+            format(
+              utcToZonedTime(currentTime, userProfile.tz),
+              show24HourTime
+                ? 'HH:mm'
+                : 'hh:mm a'
+            )
+          }
+        </p>
+        <small className='team-member__information__timezone'>
+          { userProfile.tz }
+        </small>
+        <img
+          alt={countryInformation.name}
+          className='team-member__country'
+          src={`https://catamphetamine.gitlab.io/country-flag-icons/3x2/${countryInformation.id}.svg`}
+        />
+      </div>
+    </div>
   )
 }
 
 export default TeamMember
+export type {
+  UserProfile
+}
 
