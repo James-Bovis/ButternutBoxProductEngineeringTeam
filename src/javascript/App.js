@@ -1,22 +1,26 @@
 // @flow
 
 import * as React from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { format } from 'date-fns'
 
 // Atoms
-import { is24HourState, teamInViewState, currentTimeState } from './atoms'
-
-// Data
-import TeamMembers from './data/teamMembers'
+import {
+  is24HourState,
+  currentTimeState,
+  teamMembersState,
+  channelIDState
+} from './atoms'
 
 // Components
-import TeamMember from './components/TeamMember.js'
+import Skeleton from 'react-loading-skeleton'
+import TeamMember from './components/TeamMember'
 
 // Styles
 import './../assets/stylesheets/application.sass'
 
-import type { TeamMember as TeamMemberType } from './data/teamMembers'
+// Types
+import type { UserProfile } from './components/TeamMember'
 
 type Greeting =
   | 'Good Morning,'
@@ -43,8 +47,9 @@ const generateGreeting = (hour: number): Greeting => {
 
 const App = (): React.Element<'div'> => {
   const [is24Hour, setIs24Hour] = useRecoilState(is24HourState)
-  const [teamInView, setTeamInView] = useRecoilState(teamInViewState)
   const [currentTime, setCurrentTime] = useRecoilState(currentTimeState)
+  const [teamMembers, setTeamMembers] = useRecoilState(teamMembersState)
+  const channelID = useRecoilValue(channelIDState)
 
   React.useEffect(() => {
     const tick = (): void => setCurrentTime(new Date())
@@ -56,13 +61,25 @@ const App = (): React.Element<'div'> => {
     return (): void => clearInterval(interval)
   }, [currentTime, setCurrentTime])
 
-  const filteredTeamMembers = TeamMembers.filter((teamMember: TeamMemberType): boolean | TeamMemberType => {
-    if (teamInView !== 'All') {
-      return teamMember.team === teamInView
-    } else {
-      return teamMember
-    }
-  })
+  React.useEffect((): void => {
+    const conversationMembersEndpoint = `/.netlify/functions/fetchConversationMembers?channel=${channelID}`
+
+    // Fetch all the Slack User ID's from the #predong-banter channel
+    fetch(conversationMembersEndpoint)
+    .then((response) => response.json())
+    .then((memberIDS) => {
+      memberIDS.map((userID: string) => {
+        const userProfileEndpoint = `/.netlify/functions/fetchUserProfile?userID=${userID}`
+
+        // For each member ID, get their Slack user profile
+        return fetch(userProfileEndpoint)
+        .then((response) => response.json())
+        .then((data) => {
+          setTeamMembers((oldArray) => [...oldArray, data])
+        })
+      })
+    })
+  }, [setTeamMembers, channelID])
 
   return (
     <div className='app'>
@@ -86,40 +103,47 @@ const App = (): React.Element<'div'> => {
                 { `12 hour` }
               </button>
             </div>
-
-            <div className='settings__item'>
-              <p className='settings__item__name'>
-                { `Team filter: ` }
-              </p>
-              <button className={`${teamInView === 'LTV' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('LTV')}>
-                { `LTV` }
-              </button>
-              <button className={`${teamInView === 'Growth' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('Growth')}>
-                { `Growth` }
-              </button>
-              <button className={`${teamInView === 'Platform' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('Platform')}>
-                { `Platform` }
-              </button>
-              <button className={`${teamInView === 'Data' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('Data')}>
-                { `Data` }
-              </button>
-              <button className={`${teamInView === 'All' ? '' : 'inactive'}`} onClick={(): void => setTeamInView('All')}>
-                { `All` }
-              </button>
-            </div>
           </div>
         </header>
         <p className='team-member-count'>
-          { `Members: ${filteredTeamMembers.length}` }
+          { `Members: ${teamMembers.length}` }
         </p>
         <div className='team-member-wrapper'>
           {
-            filteredTeamMembers.map(({ userID }: TeamMemberType): React.Element<typeof TeamMember> => (
-              <TeamMember
-                key={userID}
-                userID={userID}
-              />
-            ))
+            teamMembers.length > 0
+              ? (
+                teamMembers.sort((a, b) => a.name.localeCompare(b.name))
+                .map((userProfile: UserProfile) => (
+                  <TeamMember
+                    key={userProfile.id}
+                    userProfile={userProfile}
+                  />
+                ))
+              ) : (
+                <div className='team-member'>
+                  <Skeleton circle={true} height={100} width={100} />
+                  <div className='team-member__information'>
+                    <Skeleton
+                      height={20}
+                      width={200}
+                    />
+                    <Skeleton
+                      height={30}
+                      width={200}
+                    />
+                    <Skeleton
+                      height={15}
+                      width={200}
+                    />
+                    <Skeleton
+                      className='team-member__country'
+                      height={20}
+                      width={20}
+                      circle={true}
+                    />
+                  </div>
+              </div>
+            )
           }
         </div>
       </React.Suspense>

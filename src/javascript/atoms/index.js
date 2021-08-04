@@ -12,12 +12,16 @@ const localStorageEffect = key => ({setSelf, onSet}) => {
   })
 }
 
-const teamInViewState = atom({
-  key: 'teamInViewState',
-  default: 'All',
-  effects_UNSTABLE: [
-    localStorageEffect('teamInView'),
-  ]
+const teamMembersState = atom({
+  key: 'teamMembersState',
+  default: [],
+  dangerouslyAllowMutability: true
+})
+
+const onlineTeamMemberIds = atom({
+  key: 'onlineTeamMemberIds',
+  default: [],
+  dangerouslyAllowMutability: true
 })
 
 const is24HourState = atom({
@@ -33,8 +37,15 @@ const currentTimeState = atom({
   default: new Date()
 })
 
+const channelIDState = atom({
+  key: 'channelIDState',
+  default: 'C0108RB544V'
+})
+
 export {
-  teamInViewState,
   is24HourState,
-  currentTimeState
+  currentTimeState,
+  teamMembersState,
+  channelIDState,
+  onlineTeamMemberIds
 }
