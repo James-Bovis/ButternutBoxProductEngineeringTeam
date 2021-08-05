@@ -1,26 +1,28 @@
 import { atom } from 'recoil'
 
-const localStorageEffect = key => ({setSelf, onSet}) => {
+import type { UserProfile } from '../components/TeamMember'
+
+const localStorageEffect = (key: string) => ({setSelf, onSet}: { setSelf: (any: any) => void, onSet: (any: any) => void}) => {
   const savedValue = localStorage.getItem(key)
 
   if (savedValue != null) {
     setSelf(JSON.parse(savedValue));
   }
 
-  onSet(newValue => {
+  onSet((newValue: any) => {
     localStorage.setItem(key, JSON.stringify(newValue));
   })
 }
 
 const teamMembersState = atom({
   key: 'teamMembersState',
-  default: [],
+  default: [] as Array<UserProfile>,
   dangerouslyAllowMutability: true
 })
 
 const onlineTeamMemberIds = atom({
   key: 'onlineTeamMemberIds',
-  default: [],
+  default: [] as Array<String>,
   dangerouslyAllowMutability: true
 })
 

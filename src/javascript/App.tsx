@@ -1,5 +1,3 @@
-// @flow
-
 import * as React from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { format } from 'date-fns'
@@ -45,7 +43,7 @@ const generateGreeting = (hour: number): Greeting => {
   }
 }
 
-const App = (): React.Element<'div'> => {
+const App = (): React.ReactElement<'div'> => {
   const [is24Hour, setIs24Hour] = useRecoilState(is24HourState)
   const [currentTime, setCurrentTime] = useRecoilState(currentTimeState)
   const [teamMembers, setTeamMembers] = useRecoilState(teamMembersState)
