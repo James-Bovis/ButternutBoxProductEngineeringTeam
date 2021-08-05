@@ -1,5 +1,3 @@
-// @flow
-
 import * as React from 'react'
 
 // Utils
@@ -11,7 +9,7 @@ import { getCountryForTimezone } from 'countries-and-timezones'
 // Atoms
 import { currentTimeState, is24HourState, onlineTeamMemberIds } from '../atoms'
 
-type UserProfile = {|
+type UserProfile = {
   id: string,
   team_id: string,
   name: string,
@@ -56,13 +54,13 @@ type UserProfile = {|
   is_bot: boolean,
   is_app_user: boolean,
   updated: number
-|}
+}
 
-type Props = {|
+type Props = {
   userProfile: UserProfile
-|}
+}
 
-const TeamMember = ({ userProfile }: Props): React.Node => {
+const TeamMember = ({ userProfile }: Props): React.ReactElement => {
   const [isOnline, setIsOnline] = React.useState(false)
   const setOnlineTeamMemberIds = useSetRecoilState(onlineTeamMemberIds)
 
@@ -114,11 +112,15 @@ const TeamMember = ({ userProfile }: Props): React.Node => {
         <small className='team-member__information__timezone'>
           { userProfile.tz }
         </small>
-        <img
-          alt={countryInformation.name}
-          className='team-member__country'
-          src={`https://catamphetamine.gitlab.io/country-flag-icons/3x2/${countryInformation.id}.svg`}
-        />
+        {
+          countryInformation && (
+            <img
+              alt={countryInformation.name}
+              className='team-member__country'
+              src={`https://catamphetamine.gitlab.io/country-flag-icons/3x2/${countryInformation.id}.svg`}
+            />
+          )
+        }
       </div>
     </div>
   )

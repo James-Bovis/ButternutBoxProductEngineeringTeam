@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/countries-and-timezones": "^2.0.3",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.4.12",
+    "@types/react": "^17.0.15",
+    "@types/react-dom": "^17.0.9",
     "countries-and-timezones": "^2.3.1",
     "date-fns": "^2.17.0",
     "date-fns-tz": "^1.1.1",
-    "flow-bin": "^0.128.0",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.14.1",
     "normalize-scss": "^7.0.1",
@@ -15,14 +19,14 @@
     "react-loading-skeleton": "^2.1.1",
     "react-scripts": "3.4.1",
     "recoil": "^0.1.2",
-    "sass-lint": "^1.13.1"
+    "sass-lint": "^1.13.1",
+    "typescript": "^4.3.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "flow": "flow"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
