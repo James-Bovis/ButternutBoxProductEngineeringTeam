@@ -3429,10 +3429,10 @@ cosmiconfig@^6.0.0:
     path-type "^4.0.0"
     yaml "^1.7.2"
 
-countries-and-timezones@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/countries-and-timezones/-/countries-and-timezones-2.3.1.tgz#4311351da69670a6a3eb9e842716adca9ff55fa8"
-  integrity sha512-GYgwjwF2FBezIeJVOeHtQVavQY9E2CdG7LjQIrriuC8BPGxaQht0i+QAd1adgvXK7U28xJ1o2yCK6DLS1Avmsw==
+countries-and-timezones@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/countries-and-timezones/-/countries-and-timezones-3.1.0.tgz#94865b19810e3bf720bf352fc9b192ffcdea34b6"
+  integrity sha512-Y7iF+Vz1rmTVRbbmvslYn7rnvu5pq8M/7+Z6tXuB4xQod4GA6k1qhbIPAIR/t4uZjgTpfOLX1/p/Q93nyi/mug==
 
 create-ecdh@^4.0.0:
   version "4.0.3"
