@@ -60,8 +60,7 @@ rules:
   # Name Formats
   class-name-format:
     - 2
-    -
-      convention: hyphenatedbem
+    - convention: hyphenatedbem
       convention-explanation: 'Class must contain only lowercase letters, underscores and hyphens'
 
   function-name-format: 1
@@ -87,8 +86,7 @@ rules:
   max-file-line-count: 0
   nesting-depth:
     - 1
-    -
-      max-depth: 3
+    - max-depth: 3
 
   property-sort-order: 1
   pseudo-element: 1

@@ -7,13 +7,13 @@ exports.handler = async (event, context) => {
   const API_ENDPOINT = `https://slack.com/api/users.info?token=${SLACK_AUTHORIZATION_TOKEN}&user=${slackUserID}`
 
   return fetch(API_ENDPOINT, { headers: { Accept: 'application/json' } })
-    .then(response => response.json())
-    .then(data => ({
+    .then((response) => response.json())
+    .then((data) => ({
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        'Access-Control-Allow-Origin': '*'
       },
       statusCode: 200,
       body: JSON.stringify(data.user)
     }))
-    .catch(error => ({ statusCode: 422, body: String(error) }))
+    .catch((error) => ({ statusCode: 422, body: String(error) }))
 }
