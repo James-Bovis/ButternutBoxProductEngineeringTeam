@@ -2,17 +2,25 @@ import { atom } from 'recoil'
 
 import type { UserProfile } from '../components/TeamMember'
 
-const localStorageEffect = (key: string) => ({setSelf, onSet}: { setSelf: (any: any) => void, onSet: (any: any) => void}) => {
-  const savedValue = localStorage.getItem(key)
+const localStorageEffect =
+  (key: string) =>
+  ({
+    setSelf,
+    onSet
+  }: {
+    setSelf: (any: any) => void
+    onSet: (any: any) => void
+  }) => {
+    const savedValue = localStorage.getItem(key)
 
-  if (savedValue != null) {
-    setSelf(JSON.parse(savedValue));
+    if (savedValue != null) {
+      setSelf(JSON.parse(savedValue))
+    }
+
+    onSet((newValue: any) => {
+      localStorage.setItem(key, JSON.stringify(newValue))
+    })
   }
-
-  onSet((newValue: any) => {
-    localStorage.setItem(key, JSON.stringify(newValue));
-  })
-}
 
 const teamMembersState = atom({
   key: 'teamMembersState',
@@ -29,9 +37,7 @@ const onlineTeamMemberIds = atom({
 const is24HourState = atom({
   key: 'is24HourState',
   default: true,
-  effects_UNSTABLE: [
-    localStorageEffect('is24Hour'),
-  ]
+  effects_UNSTABLE: [localStorageEffect('is24Hour')]
 })
 
 const currentTimeState = atom({
