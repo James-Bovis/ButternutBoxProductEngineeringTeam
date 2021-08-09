@@ -11,6 +11,7 @@
     "countries-and-timezones": "^2.3.1",
     "date-fns": "^2.17.0",
     "date-fns-tz": "^1.1.1",
+    "lodash": "^4.17.21",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.14.1",
     "normalize-scss": "^7.0.1",
@@ -45,6 +46,7 @@
   },
   "sasslintConfig": "sass-lint.yml",
   "devDependencies": {
+    "@types/lodash": "^4.14.172",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "prettier": "2.3.2"

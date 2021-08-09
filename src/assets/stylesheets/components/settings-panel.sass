@@ -1,0 +1,136 @@
+////////////////////////////////////////////////////////////////////////////////
+// Settings Panel
+// A modal-like interface which lets the user adjust the app's settings to their
+// particular liking
+////////////////////////////////////////////////////////////////////////////////
+
+.settings-panel-wrapper
+  background: rgba($brand-black, 0)
+  display: flex
+  height: 100vh
+  justify-content: flex-end
+  left: 0
+  overflow: hidden
+  pointer-events: none
+  position: fixed
+  top: 0
+  transition: background .25s ease
+  width: 100vw
+
+  &--open
+    background: rgba($brand-black, .75)
+    pointer-events: all
+
+.settings-panel
+  background: $brand-white
+  cursor: auto
+  height: 100%
+  opacity: 0
+  padding: 3rem 1.5rem
+  position: relative
+  transform: translateX(100%)
+  transition: opacity .25s ease, transform .5s ease
+  width: 100%
+
+  +mediawidth(md)
+    max-width: 40%
+    padding: 3rem
+
+  &--open
+    opacity: 1
+    transform: translateX(0)
+
+  &__title
+    color: $brand-blue-500
+    font-size: $medium-title
+    margin: 0 0 3rem
+
+    +mediawidth(md)
+      font-size: $large-title
+
+  &__close-button
+    align-items: center
+    background: $brand-blue-500
+    border: 0
+    border-radius: 50%
+    display: flex
+    height: 3rem
+    justify-content: center
+    position: absolute
+    right: 3rem
+    top: 3rem
+    width: 3rem
+
+    &:hover
+      cursor: pointer
+
+    &::after
+      color: $brand-white
+      content: 'X'
+      font-size: $paragraph
+      position: absolute
+
+
+.setting
+  margin-bottom: 6rem
+
+  &__title
+    color: $brand-blue-500
+    font-size: $tiny-title
+    margin-bottom: 1.5rem
+
+  p
+    color: $brand-blue-500
+    font-family: $font-family-base
+    font-size: $paragraph
+
+  button
+    background: $brand-blue-500
+    border: 0
+    border-radius: .3rem
+    color: $brand-white
+    font-family: $font-family-base
+    font-size: $paragraph
+    margin-right: 1rem
+    padding: 1rem 1.5rem
+    transition: background .25s ease
+
+    &:disabled
+      background: $brand-blue-300
+
+    &:hover
+      cursor: pointer
+
+      &:disabled
+        cursor: not-allowed
+
+    &:last-of-type
+      margin-right: 0
+
+    &.deselected
+      background: $brand-blue-300
+
+      &:hover
+        background: $brand-blue-400
+        cursor: pointer
+
+    &.selected
+      background: $brand-blue-500
+
+      &:hover
+        background: $brand-blue-600
+
+  &__input-row
+    display: grid
+    grid-gap: 1.5rem
+
+    +mediawidth(md)
+      grid-template-columns: 70% 1fr
+
+
+    input
+      border: .1rem solid $brand-blue-500
+      color: $brand-blue-500
+      font-family: $font-family-base
+      font-size: $paragraph
+      padding: .5rem 1rem
