@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { format } from 'date-fns'
+import { uniqBy } from 'lodash'
 
 // Atoms
 import {
@@ -13,6 +14,8 @@ import {
 // Components
 import Skeleton from 'react-loading-skeleton'
 import TeamMember from './components/TeamMember'
+import NavigationBar from './components/NavigationBar'
+import SettingsPanel from './components/SettingsPanel'
 
 // Styles
 import './../assets/stylesheets/application.sass'
@@ -33,10 +36,10 @@ const generateGreeting = (hour: number): Greeting => {
 }
 
 const App = (): React.ReactElement<'div'> => {
-  const [is24Hour, setIs24Hour] = useRecoilState(is24HourState)
   const [currentTime, setCurrentTime] = useRecoilState(currentTimeState)
   const [teamMembers, setTeamMembers] = useRecoilState(teamMembersState)
   const channelID = useRecoilValue(channelIDState)
+  const is24Hour = useRecoilValue(is24HourState)
 
   React.useEffect(() => {
     const tick = (): void => setCurrentTime(new Date())
@@ -55,6 +58,7 @@ const App = (): React.ReactElement<'div'> => {
       .then((memberIDS) => {
         memberIDS.map((userID: string) => {
           const userProfileEndpoint = `/.netlify/functions/fetchUserProfile?userID=${userID}`
+          setTeamMembers([])
 
           // For each member ID, get their Slack user profile
           return fetch(userProfileEndpoint)
@@ -69,6 +73,7 @@ const App = (): React.ReactElement<'div'> => {
   return (
     <div className='app'>
       <React.Suspense fallback={<p>App is waking up...</p>}>
+        <NavigationBar />
         <header className='header'>
           <h1>{generateGreeting(currentTime.getHours())}</h1>
           <h2>
@@ -77,28 +82,11 @@ const App = (): React.ReactElement<'div'> => {
               `cccc, do MMMM - ${is24Hour ? 'HH:mm' : 'hh:mm a'}`
             )}`}
           </h2>
-          <div className='settings'>
-            <div className='settings__item'>
-              <p className='settings__item__name'>{`Time format: `}</p>
-              <button
-                className={`${is24Hour ? '' : 'inactive'}`}
-                onClick={(): void => setIs24Hour(true)}
-              >
-                {`24 hour`}
-              </button>
-              <button
-                className={`${is24Hour ? 'inactive' : ''}`}
-                onClick={(): void => setIs24Hour(false)}
-              >
-                {`12 hour`}
-              </button>
-            </div>
-          </div>
         </header>
         <p className='team-member-count'>{`Members: ${teamMembers.length}`}</p>
         <div className='team-member-wrapper'>
           {teamMembers.length > 0 ? (
-            teamMembers
+            uniqBy(teamMembers, 'id')
               .sort((a, b) => a.name.localeCompare(b.name))
               .map((userProfile: UserProfile) => (
                 <TeamMember key={userProfile.id} userProfile={userProfile} />
@@ -120,6 +108,7 @@ const App = (): React.ReactElement<'div'> => {
             </div>
           )}
         </div>
+        <SettingsPanel />
       </React.Suspense>
     </div>
   )

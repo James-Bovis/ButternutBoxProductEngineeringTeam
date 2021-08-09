@@ -47,7 +47,13 @@ const currentTimeState = atom({
 
 const channelIDState = atom({
   key: 'channelIDState',
-  default: 'C0108RB544V'
+  default: 'C0108RB544V',
+  effects_UNSTABLE: [localStorageEffect('chosenID')]
+})
+
+const settingsPanelOpenState = atom({
+  key: 'settingsPanelOpenState',
+  default: false
 })
 
 export {
@@ -55,5 +61,6 @@ export {
   currentTimeState,
   teamMembersState,
   channelIDState,
-  onlineTeamMemberIds
+  onlineTeamMemberIds,
+  settingsPanelOpenState
 }
