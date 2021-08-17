@@ -87,7 +87,7 @@ const App = (): React.ReactElement<'div'> => {
         <div className='team-member-wrapper'>
           {teamMembers.length > 0 ? (
             uniqBy(teamMembers, 'id')
-              .sort((a, b) => a.name.localeCompare(b.name))
+              .sort((a, b) => a.realName.localeCompare(b.realName))
               .map((userProfile: UserProfile) => (
                 <TeamMember key={userProfile.id} userProfile={userProfile} />
               ))
