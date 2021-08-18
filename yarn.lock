@@ -3434,10 +3434,10 @@ cosmiconfig@^6.0.0:
     path-type "^4.0.0"
     yaml "^1.7.2"
 
-countries-and-timezones@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/countries-and-timezones/-/countries-and-timezones-2.3.1.tgz#4311351da69670a6a3eb9e842716adca9ff55fa8"
-  integrity sha512-GYgwjwF2FBezIeJVOeHtQVavQY9E2CdG7LjQIrriuC8BPGxaQht0i+QAd1adgvXK7U28xJ1o2yCK6DLS1Avmsw==
+countries-and-timezones@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/countries-and-timezones/-/countries-and-timezones-3.2.1.tgz#5be0bbb3a4c27ae01ed4dafba68337769acce490"
+  integrity sha512-ksg02vvHTEo+feCcBVFN7zAe+8EO7yfIJhLhwM9O3JsVMaxEYo+LrikxaiQnqSTbKgRwJlRZ8mYrpvAKQE0rsQ==
 
 create-ecdh@^4.0.0:
   version "4.0.3"
