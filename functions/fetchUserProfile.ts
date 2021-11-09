@@ -67,7 +67,8 @@ exports.handler = async (event, context): Promise<UserProfile> => {
         realName: data.user.real_name,
         avatar: data.user.profile.image_192,
         timeZone: data.user.tz,
-        timeZoneLabel: data.user.tz_label
+        timeZoneLabel: data.user.tz_label,
+        timeZoneOffset: data.user.tz_offset
       })
     }))
     .catch((error) => ({ statusCode: 422, body: String(error) }))

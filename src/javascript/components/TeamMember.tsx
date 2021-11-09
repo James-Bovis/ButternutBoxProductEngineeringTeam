@@ -15,6 +15,7 @@ type UserProfile = {
   avatar: string
   timeZone: string
   timeZoneLabel: string
+  timeZoneOffset: number
 }
 
 type Props = {
@@ -29,6 +30,27 @@ const TeamMember = ({ userProfile }: Props): React.ReactElement => {
   const currentTime = useRecoilValue(currentTimeState)
 
   const countryInformation = getCountryForTimezone(userProfile.timeZone)
+
+  const timezoneLabel = (userProfile: UserProfile): string => {
+    // Difference in minutes from UTC
+    const localOffset = currentTime.getTimezoneOffset()
+
+    // Slack returns difference in seconds from UTC
+    const userOffset = userProfile.timeZoneOffset / 60
+
+    // Calculate the hour difference between both offsets
+    const hourDifference = (userOffset - localOffset) / 60
+
+    if (hourDifference === 0) {
+      return userProfile.timeZoneLabel
+    }
+
+    if (hourDifference > 0) {
+      return `${userProfile.timeZoneLabel} (+${hourDifference}hrs)`
+    } else {
+      return `${userProfile.timeZoneLabel} (${hourDifference}hrs)`
+    }
+  }
 
   // Fetch the Team Members Slack profile and presence status
   React.useEffect((): void => {
@@ -73,7 +95,7 @@ const TeamMember = ({ userProfile }: Props): React.ReactElement => {
           )}
         </p>
         <small className='team-member__information__timezone'>
-          {userProfile.timeZone}
+          {timezoneLabel(userProfile)}
         </small>
         {countryInformation && (
           <img
