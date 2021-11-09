@@ -1,13 +1,16 @@
 import * as React from 'react'
 
 // Utils
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilValue } from 'recoil'
 import { format } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'
 import { getCountryForTimezone } from 'countries-and-timezones'
 
+// Hooks
+import useGetTeamMemberPresence from '../hooks/useGetTeamMemberPresence'
+
 // Atoms
-import { currentTimeState, is24HourState, onlineTeamMemberIds } from '../atoms'
+import { currentTimeState, is24HourState } from '../atoms'
 
 type UserProfile = {
   id: string
@@ -23,11 +26,9 @@ type Props = {
 }
 
 const TeamMember = ({ userProfile }: Props): React.ReactElement => {
-  const [isOnline, setIsOnline] = React.useState(false)
-  const setOnlineTeamMemberIds = useSetRecoilState(onlineTeamMemberIds)
-
   const show24HourTime = useRecoilValue(is24HourState)
   const currentTime = useRecoilValue(currentTimeState)
+  const { isOnline } = useGetTeamMemberPresence(userProfile.id)
 
   const countryInformation = getCountryForTimezone(userProfile.timeZone)
 
@@ -51,22 +52,6 @@ const TeamMember = ({ userProfile }: Props): React.ReactElement => {
       return `${userProfile.timeZoneLabel} (${hourDifference}hrs)`
     }
   }
-
-  // Fetch the Team Members Slack profile and presence status
-  React.useEffect((): void => {
-    const userPresenceEndpoint = `/.netlify/functions/slackOnlineStatus?userID=${userProfile.id}`
-
-    fetch(userPresenceEndpoint)
-      .then((response) => response.text())
-      .then((data) => {
-        if (data === 'active') {
-          setIsOnline(true)
-          setOnlineTeamMemberIds((oldArray) => [...oldArray, userProfile.id])
-        } else {
-          setIsOnline(false)
-        }
-      })
-  }, [userProfile.id, setOnlineTeamMemberIds])
 
   return (
     <div className='team-member'>
