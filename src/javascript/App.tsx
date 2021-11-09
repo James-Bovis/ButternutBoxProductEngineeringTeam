@@ -25,6 +25,8 @@ import type { UserProfile } from './components/TeamMember'
 
 type Greeting = 'Good Morning,' | 'Good Evening,' | 'Good Afternoon,'
 
+const hiddenUserIds = ['UTQLW7602']
+
 const generateGreeting = (hour: number): Greeting => {
   if (hour < 12) {
     return 'Good Morning,'
@@ -56,17 +58,19 @@ const App = (): React.ReactElement<'div'> => {
     fetch(conversationMembersEndpoint)
       .then((response) => response.json())
       .then((memberIDS) => {
-        memberIDS.map((userID: string) => {
-          const userProfileEndpoint = `/.netlify/functions/fetchUserProfile?userID=${userID}`
-          setTeamMembers([])
+        memberIDS
+          .filter((userId: string) => !hiddenUserIds.includes(userId))
+          .map((userID: string) => {
+            const userProfileEndpoint = `/.netlify/functions/fetchUserProfile?userID=${userID}`
+            setTeamMembers([])
 
-          // For each member ID, get their Slack user profile
-          return fetch(userProfileEndpoint)
-            .then((response) => response.json())
-            .then((data) => {
-              setTeamMembers((oldArray) => [...oldArray, data])
-            })
-        })
+            // For each member ID, get their Slack user profile
+            return fetch(userProfileEndpoint)
+              .then((response) => response.json())
+              .then((data) => {
+                setTeamMembers((oldArray) => [...oldArray, data])
+              })
+          })
       })
   }, [setTeamMembers, channelID])
 
