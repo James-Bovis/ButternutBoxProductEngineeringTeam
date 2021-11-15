@@ -64,6 +64,7 @@ exports.handler = async (event, context): Promise<UserProfile> => {
       statusCode: 200,
       body: JSON.stringify({
         id: data.user.id,
+        teamId: data.user.team_id,
         realName: data.user.real_name,
         avatar: data.user.profile.image_192,
         timeZone: data.user.tz,

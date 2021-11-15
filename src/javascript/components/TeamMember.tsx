@@ -6,6 +6,9 @@ import { format } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'
 import { getCountryForTimezone } from 'countries-and-timezones'
 
+// Assets
+import ChatBubble from '../../assets/images/chat-bubble.svg'
+
 // Hooks
 import useGetTeamMemberPresence from '../hooks/useGetTeamMemberPresence'
 
@@ -14,6 +17,7 @@ import { currentTimeState, is24HourState } from '../atoms'
 
 type UserProfile = {
   id: string
+  teamId: string
   realName: string
   avatar: string
   timeZone: string
@@ -89,6 +93,15 @@ const TeamMember = ({ userProfile }: Props): React.ReactElement => {
             src={`https://catamphetamine.gitlab.io/country-flag-icons/3x2/${countryInformation.id}.svg`}
           />
         )}
+        <a
+          href={`slack://user?team=${userProfile.teamId}&id=${userProfile.id}`}
+          className='team-member__chat-icon'
+        >
+          <img
+            alt={`Send ${userProfile.realName} a message on Slack.`}
+            src={ChatBubble}
+          />
+        </a>
       </div>
     </div>
   )
