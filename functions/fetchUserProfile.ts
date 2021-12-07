@@ -57,18 +57,31 @@ exports.handler = async (event, context): Promise<UserProfile> => {
 
   return fetch(API_ENDPOINT, { headers: { Accept: 'application/json' } })
     .then((response) => response.json())
-    .then((data: { user: SlackUser }) => ({
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
-      statusCode: 200,
-      body: JSON.stringify({
-        id: data.user.id,
-        realName: data.user.real_name,
-        avatar: data.user.profile.image_192,
-        timeZone: data.user.tz,
-        timeZoneLabel: data.user.tz_label
-      })
-    }))
+    .then((data) => {
+      const { user, ok, error } = data
+
+      if (!ok) {
+        return {
+          statusCode: 429,
+          body: error
+        }
+      }
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          id: user.id,
+          teamId: user.team_id,
+          realName: user.real_name,
+          avatar: user.profile.image_192,
+          timeZone: user.tz,
+          timeZoneLabel: user.tz_label,
+          timeZoneOffset: user.tz_offset,
+          deleted: user.deleted,
+          isInvitedUser: user.is_invited_user,
+          isBot: user.is_bot
+        })
+      }
+    })
     .catch((error) => ({ statusCode: 422, body: String(error) }))
 }
