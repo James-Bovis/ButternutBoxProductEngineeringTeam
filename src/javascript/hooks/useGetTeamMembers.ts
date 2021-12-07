@@ -36,8 +36,10 @@ const useGetTeamMembers = (): UseTeamMembers => {
             // For each member ID, get their Slack user profile
             return fetch(userProfileEndpoint)
               .then((response) => response.json())
-              .then((data) => {
-                setTeamMembers((oldArray) => [...oldArray, data])
+              .then((data: UserProfile) => {
+                data.deleted || data.isInvitedUser || data.isBot
+                  ? setTeamMembers((oldArray) => [...oldArray])
+                  : setTeamMembers((oldArray) => [...oldArray, data])
               })
           })
       })

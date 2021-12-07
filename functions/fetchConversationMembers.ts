@@ -4,16 +4,40 @@ const { SLACK_AUTHORIZATION_TOKEN } = process.env
 
 exports.handler = async (event, context) => {
   const channelID = event.queryStringParameters.channel
-  const API_ENDPOINT = `https://slack.com/api/conversations.members?token=${SLACK_AUTHORIZATION_TOKEN}&channel=${channelID}`
 
-  return fetch(API_ENDPOINT, { headers: { Accept: 'application/json' } })
-    .then((response) => response.json())
-    .then((data) => ({
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
-      statusCode: 200,
-      body: JSON.stringify(data.members)
-    }))
-    .catch((error) => ({ statusCode: 422, body: String(error) }))
+  let members = []
+  let cursor = ''
+
+  const baseURL = `https://slack.com/api/conversations.members?channel=${channelID}&limit=200`
+
+  do {
+    try {
+      const API_ENDPOINT = `${baseURL}${cursor}`
+
+      const fetchData = await fetch(API_ENDPOINT, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${SLACK_AUTHORIZATION_TOKEN}`
+        }
+      })
+
+      const data = await fetchData.json()
+
+      cursor = data.response_metadata.next_cursor
+        ? `&cursor=${data.response_metadata.next_cursor}%3D`
+        : ''
+
+      members.push(data.members)
+    } catch (error) {
+      return {
+        statusCode: 422,
+        body: String(error)
+      }
+    }
+  } while (cursor !== '')
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(members.flat())
+  }
 }
