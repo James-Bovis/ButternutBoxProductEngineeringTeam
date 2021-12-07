@@ -37,7 +37,9 @@ const useGetTeamMembers = (): UseTeamMembers => {
             return fetch(userProfileEndpoint)
               .then((response) => response.json())
               .then((data) => {
-                setTeamMembers((oldArray) => [...oldArray, data])
+                data.deleted
+                  ? setTeamMembers((oldArray) => [...oldArray])
+                  : setTeamMembers((oldArray) => [...oldArray, data])
               })
           })
       })
