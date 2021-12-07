@@ -77,7 +77,9 @@ exports.handler = async (event, context): Promise<UserProfile> => {
           timeZone: user.tz,
           timeZoneLabel: user.tz_label,
           timeZoneOffset: user.tz_offset,
-          deleted: user.deleted
+          deleted: user.deleted,
+          isInvitedUser: user.is_invited_user,
+          isBot: user.is_bot
         })
       }
     })

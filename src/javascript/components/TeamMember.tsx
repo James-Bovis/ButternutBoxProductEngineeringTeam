@@ -23,6 +23,9 @@ type UserProfile = {
   timeZone: string
   timeZoneLabel: string
   timeZoneOffset: number
+  deleted: boolean
+  isInvitedUser: boolean
+  isBot: boolean
 }
 
 type Props = {
