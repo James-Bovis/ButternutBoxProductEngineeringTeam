@@ -6,7 +6,7 @@ import { useRecoilState } from 'recoil'
 // Atoms
 import { settingsPanelOpenState, channelIDState, is24HourState } from '../atoms'
 
-const isValidChannelID = (channelID: string): boolean => channelID.length === 11
+const isValidChannelID = (channelID: string): boolean => channelID.length >= 9
 
 const SettingsPanel = (): React.ReactElement => {
   const [settingsPanelOpen, setSettingsPanelOpen] = useRecoilState(
