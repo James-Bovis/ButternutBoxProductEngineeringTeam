@@ -127,10 +127,14 @@
     +mediawidth(md)
       grid-template-columns: 70% 1fr
 
-
-    input
+    input,
+    select,
       border: .1rem solid $brand-blue-500
       color: $brand-blue-500
       font-family: $font-family-base
       font-size: $paragraph
+      outline: 0
       padding: .5rem 1rem
+
+      &:hover
+        cursor: pointer

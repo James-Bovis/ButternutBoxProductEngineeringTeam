@@ -6,8 +6,6 @@ import { useRecoilState } from 'recoil'
 // Atoms
 import { settingsPanelOpenState, channelIDState, is24HourState } from '../atoms'
 
-const isValidChannelID = (channelID: string): boolean => channelID.length >= 9
-
 const SettingsPanel = (): React.ReactElement => {
   const [settingsPanelOpen, setSettingsPanelOpen] = useRecoilState(
     settingsPanelOpenState
@@ -29,6 +27,29 @@ const SettingsPanel = (): React.ReactElement => {
     closeSettingsPanel()
     setChannelID(tempoaryChannelId)
   }, [setChannelID, closeSettingsPanel, tempoaryChannelId])
+
+  const channelIds = [
+    {
+      name: '#predong-banter',
+      value: 'C0108RB544V'
+    },
+    {
+      name: '#butternutsquad',
+      value: 'CN3FS664T'
+    },
+    {
+      name: '#digital-product-issues',
+      value: 'CF83S0XM0'
+    },
+    {
+      name: '#box-office',
+      value: 'C01R01FBRLY'
+    },
+    {
+      name: '#rudies-kitchen',
+      value: 'C01Q3D80Z9U'
+    }
+  ]
 
   // Lock scrolling when the Settings panel is open
   React.useEffect((): void => {
@@ -68,18 +89,22 @@ const SettingsPanel = (): React.ReactElement => {
         <div className='setting'>
           <h4 className='setting__title'>{`Slack Channel ID`}</h4>
           <div className='setting__input-row'>
-            <input
-              type='text'
+            <select
               value={tempoaryChannelId}
               onChange={(e): void =>
                 setTempoaryChannelId(e.currentTarget.value)
               }
-            />
+            >
+              {channelIds
+                .sort((a, b) => (a.name < b.name ? -1 : 1))
+                .map((channel) => (
+                  <option value={channel.value} key={channel.value}>
+                    {channel.name}
+                  </option>
+                ))}
+            </select>
             <button
-              disabled={
-                tempoaryChannelId === channelID ||
-                !isValidChannelID(tempoaryChannelId)
-              }
+              disabled={tempoaryChannelId === channelID}
               onClick={saveChannelId}
             >{`Save ID`}</button>
           </div>
