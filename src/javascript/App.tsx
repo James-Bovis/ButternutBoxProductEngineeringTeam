@@ -54,26 +54,26 @@ const App = (): React.ReactElement<'div'> => {
         </header>
         <p className='team-member-count'>{`Members: ${teamMembers.length}`}</p>
         <div className='team-member-wrapper'>
-          {teamMembers.length > 0 ? (
-            teamMembers.map((userProfile: UserProfile) => (
-              <TeamMember key={userProfile.id} userProfile={userProfile} />
-            ))
-          ) : (
-            <div className='team-member'>
-              <Skeleton circle={true} height={100} width={100} />
-              <div className='team-member__information'>
-                <Skeleton height={20} width={200} />
-                <Skeleton height={30} width={200} />
-                <Skeleton height={15} width={200} />
-                <Skeleton
-                  className='team-member__country'
-                  height={20}
-                  width={20}
-                  circle={true}
-                />
-              </div>
-            </div>
-          )}
+          {teamMembers.length > 0
+            ? teamMembers.map((userProfile: UserProfile) => (
+                <TeamMember key={userProfile.id} userProfile={userProfile} />
+              ))
+            : Array.from(Array(12), (_, index) => (
+                <div className='team-member' key={index}>
+                  <Skeleton circle={true} height={100} width={100} />
+                  <div className='team-member__information'>
+                    <Skeleton height={20} width={200} />
+                    <Skeleton height={30} width={200} />
+                    <Skeleton height={15} width={200} />
+                    <Skeleton
+                      className='team-member__country'
+                      height={20}
+                      width={20}
+                      circle={true}
+                    />
+                  </div>
+                </div>
+              ))}
         </div>
         <SettingsPanel />
       </React.Suspense>
